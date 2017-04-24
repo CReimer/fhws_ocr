@@ -3,32 +3,19 @@ import cv2
 
 class Preprocessing:
     def __init__(self, img):
+        print("Init Preprocessing")
         self.img = img
         self.rows = len(img[0])
         self.lines = len(img)
 
-        # Contrast stretch
-
-        # for line in range(len(self.img)):
-        #     for row in range(len(self.img[line])):
-        #         self.img[line][row] = (self.img[line][row] - self.img.min()) / (self.img.max() - self.img.min()) * 255
-
-        # ret, self.img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY)
-        # ret, self.img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
-        # ret, thresh3 = cv2.threshold(img, 127, 255, cv2.THRESH_TRUNC)
-        # ret, thresh4 = cv2.threshold(img, 127, 255, cv2.THRESH_TOZERO)
-        # ret, thresh5 = cv2.threshold(img, 127, 255, cv2.THRESH_TOZERO_INV)
-
-        # row_info = [None] * self.rows
-        # for row in range(self.rows):
-        #     single = 0
-        #     for line in range(self.lines):
-        #         single += self.img[line][row]
-        #     row_info[row] = single
-
-        # print('dd')
+    def stretchContrast(self):
+        print("Stretching contrast")
+        for line in range(len(self.img)):
+            for row in range(len(self.img[line])):
+                self.img[line][row] = (self.img[line][row] - self.img.min()) / (self.img.max() - self.img.min()) * 255
 
     def binariseImg(self):
+        print("Binarising image")
         ret, img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY)
 
         # Check if inversion is necessary
@@ -46,7 +33,11 @@ class Preprocessing:
 
         self.img = img
 
-    def splitChars(self):
+    # Trennung an Spalten mit 0 Pixeln
+    def splitChars(self, occupancyThres=0):
+        print("Splitting characters")
+
+        # Zähle genutze Pixel in allen Spalten
         rowOccupancy = [None] * self.rows
         for row in range(self.rows):
             singleOcc = 0
@@ -55,25 +46,17 @@ class Preprocessing:
                     singleOcc += 1
             rowOccupancy[row] = singleOcc
 
-        print("dd1")
-
-        occupancyThres = 2
-
         chars = []
-        temp_counter = 0
         cur_row = 0
         start_row = None
         end_row = None
         while cur_row < self.rows:
             if start_row and end_row:
-                temp_counter += 1
-
-                chars.append(self.img[0:30, start_row:end_row])
+                chars.append(self.img[0:self.lines, start_row:end_row])
 
                 start_row = None
                 end_row = None
 
-                # cur_row += 1
                 continue
 
             if start_row:
@@ -85,12 +68,8 @@ class Preprocessing:
 
             cur_row += 1
 
-        print("dd2")
+        # for idx in range(len(chars)):
+        #     cv2.imwrite("single" + str(idx) + '.jpg', chars[idx])
+        return chars
 
-        for idx in range(len(chars)):
-            cv2.imwrite("single" + str(idx) + '.jpg', chars[idx])
 
-    def showImage(self):
-        cv2.imshow('Preprocessing', self.img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
