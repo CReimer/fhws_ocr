@@ -47,10 +47,11 @@ class Preprocessing:
             rowOccupancy[row] = singleOcc
 
         chars = []
-        cur_row = 0
+        cur_row = -1
         start_row = None
         end_row = None
         while cur_row < self.rows:
+            cur_row += 1
             if start_row and end_row:
                 chars.append(self.img[0:self.lines, start_row:end_row])
 
@@ -66,10 +67,6 @@ class Preprocessing:
                 if rowOccupancy[cur_row] > occupancyThres:
                     start_row = cur_row
 
-            cur_row += 1
-
-        # for idx in range(len(chars)):
-        #     cv2.imwrite("single" + str(idx) + '.jpg', chars[idx])
         return chars
 
 
