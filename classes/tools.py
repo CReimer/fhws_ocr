@@ -7,7 +7,9 @@ class Tools:
 
     @staticmethod
     def showImage(img):
+        cv2.namedWindow('Preprocessing', cv2.WINDOW_NORMAL)
         cv2.imshow('Preprocessing', img)
+        cv2.resizeWindow('Preprocessing', 600, 600)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
