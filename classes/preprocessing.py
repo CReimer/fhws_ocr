@@ -15,8 +15,10 @@ class Preprocessing:
                 self.img[line][row] = (self.img[line][row] - self.img.min()) / (self.img.max() - self.img.min()) * 255
 
     def binariseImg(self):
+        block_size = 11  # decides the size of neighbourhood area
+        c = -10  # a constant which is subtracted from the mean or weighted mean
         print("Binarising image")
-        ret, img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY)
+        img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
 
         # Check if inversion is necessary
         black = 0
@@ -29,9 +31,9 @@ class Preprocessing:
                     black += 1
 
         if black > white:
-            ret, img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY_INV)
+            img = (255 - img)
 
-        self.img = img
+            self.img = img
 
     # Trennung an Spalten mit 0 Pixeln
     def splitChars(self, occupancyThres=0):
@@ -60,13 +62,14 @@ class Preprocessing:
 
                 continue
 
-            if start_row:
-                if rowOccupancy[cur_row] <= occupancyThres:
-                    end_row = cur_row
-            else:
-                if rowOccupancy[cur_row] > occupancyThres:
-                    start_row = cur_row
+            try:
+                if start_row:
+                    if rowOccupancy[cur_row] <= occupancyThres:
+                        end_row = cur_row
+                else:
+                    if rowOccupancy[cur_row] > occupancyThres:
+                        start_row = cur_row
+            except IndexError:
+                break
 
         return chars
-
-
