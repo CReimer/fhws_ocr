@@ -1,4 +1,5 @@
 import cv2
+import numpy
 
 
 class Preprocessing:
@@ -18,7 +19,8 @@ class Preprocessing:
         block_size = 11  # decides the size of neighbourhood area
         c = -10  # a constant which is subtracted from the mean or weighted mean
         print("Binarising image")
-        img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
+        ret, img = cv2.threshold(self.img, 100, 255, cv2.THRESH_BINARY)
+        # img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
 
         # Check if inversion is necessary
         black = 0
@@ -30,7 +32,7 @@ class Preprocessing:
                 else:
                     black += 1
 
-        if black > white:
+        if black < white:
             img = (255 - img)
 
             self.img = img
@@ -44,7 +46,7 @@ class Preprocessing:
         for row in range(self.rows):
             singleOcc = 0
             for line in range(self.lines):
-                if self.img[line][row] == 0:
+                if self.img[line][row] == 255:
                     singleOcc += 1
             rowOccupancy[row] = singleOcc
 
@@ -73,3 +75,24 @@ class Preprocessing:
                 break
 
         return chars
+
+    def skelettizeImg(self):
+        skel = numpy.zeros(self.img.shape, numpy.uint8)  # Initialize empty skeleton
+        element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))  # Define erode and dilate behaviour
+        size = numpy.size(self.img)  # Pixel count
+        black_pixels = 0  # Initialize with zero
+
+        # Break if there are only black pixels (background)
+        while not black_pixels == size:
+            eroded = cv2.erode(self.img, element)  # Slim picture down by one pixel
+            dilated = cv2.dilate(eroded, element)  # Use slimmed down picture and increase thickness by one pixel
+            # With this process we have removed possible unique features of a character
+
+            remain = cv2.subtract(self.img,
+                                  dilated)  # Subtract dilated img from source img. Only unique features remain here
+            skel = cv2.bitwise_or(skel, remain)  # Append these unique features to our skeleton image
+            self.img = eroded.copy()  # Use the slimmed down picture for next loop run
+
+            black_pixels = size - cv2.countNonZero(self.img)  # Number of black pixels
+
+        self.img = skel

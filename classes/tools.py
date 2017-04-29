@@ -6,10 +6,10 @@ class Tools:
         print("Init Tools")
 
     @staticmethod
-    def showImage(img):
-        cv2.namedWindow('Preprocessing', cv2.WINDOW_NORMAL)
-        cv2.imshow('Preprocessing', img)
-        cv2.resizeWindow('Preprocessing', 600, 600)
+    def showImage(img, windowname='OCR Project'):
+        cv2.namedWindow(windowname, cv2.WINDOW_NORMAL)
+        cv2.imshow(windowname, img)
+        cv2.resizeWindow(windowname, 600, 600)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
