@@ -18,7 +18,8 @@ class Preprocessing:
         block_size = 11  # decides the size of neighbourhood area
         c = -10  # a constant which is subtracted from the mean or weighted mean
         print("Binarising image")
-        img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
+        # img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
+        ret, img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY)
 
         # Check if inversion is necessary
         black = 0
@@ -33,7 +34,7 @@ class Preprocessing:
         if black > white:
             img = (255 - img)
 
-            self.img = img
+        self.img = img
 
     # Trennung an Spalten mit 0 Pixeln
     def splitChars(self, occupancyThres=0):
@@ -73,3 +74,4 @@ class Preprocessing:
                 break
 
         return chars
+#
