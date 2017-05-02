@@ -19,6 +19,7 @@ class Histogram:
                 if self.img[line][row] == 255:
                     count = count + 1
             f.append(row, count)
+        return f
 
     # Histogramm für die lines
 
@@ -31,5 +32,5 @@ class Histogram:
                 if self.img[line][row] == 255:
                     count = count + 1
             f.append(line, count)
-
+        return f
 #
