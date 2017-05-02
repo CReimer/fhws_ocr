@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import cv2
+from classes.histogram import Histogram
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
 
@@ -11,6 +12,17 @@ tools = Tools()
 
 
 test.binariseImg()
+testJ = Histogram(test.img)
+f = testJ.runterfallen()
+for idx in range(len(f)):
+    print(f[idx])
+
+print("_______________________________________________________________________________________________")
+
+f = testJ.zurseiterutschen()
+for idx in range(len(f)):
+   print(f[idx])
+
 tools.showImage(test.img)
 chars = test.splitChars()
 

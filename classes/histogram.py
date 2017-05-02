@@ -3,7 +3,7 @@ import cv2
 
 class Histogram:
     def __init__(self, img):
-        print("Init Preprocessing")
+        print("Init Histogram")
         self.img = img
         self.rows = len(img[0])
         self.lines = len(img)
@@ -16,9 +16,9 @@ class Histogram:
         for row in range(len(self.img)):
             count = 0
             for line in range(len(self.img[row])):
-                if self.img[line][row] == 255:
+                if self.img[row][line] == 0:
                     count = count + 1
-            f.append(row, count)
+            f.append(count)
         return f
 
     # Histogramm für die lines
@@ -29,8 +29,8 @@ class Histogram:
         for line in range(len(self.img)):
             count = 0
             for row in range(len(self.img[line])):
-                if self.img[line][row] == 255:
+                if self.img[line][row] == 0:
                     count = count + 1
-            f.append(line, count)
+            f.append(count)
         return f
 #
