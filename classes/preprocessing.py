@@ -42,7 +42,7 @@ class Preprocessing:
         print("Splitting characters")
         chars = []
 
-        rowOccupancy = [None] * self.rows
+        rowOccupancy = [0] * self.rows
         for row in range(self.rows):
             for line in range(self.lines):
                 if self.img[line][row] == 255:
