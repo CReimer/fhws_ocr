@@ -1,5 +1,5 @@
 import numpy
-from matplotlib.mlab import PCA
+from matplotlib.mlab import PCA as matplot_pca
 
 
 class PCA:
@@ -11,7 +11,10 @@ class PCA:
         for img in img_arr:
             matrix.append(self.generateRowVector(img))
 
-        self.generateMeanPerLine(matrix)
+        means = self.generateMeanPerLine(matrix)
+        newMatrix = self.shiftByMean(matrix, means)
+        pcaResult = self.mlabPCA(newMatrix)
+        print(pcaResult)
 
     @staticmethod
     def generateRowVector(img):
@@ -43,25 +46,21 @@ class PCA:
 
         return meansPerLine
 
-# __Flo's Part___
-
-    def shiftingByMean(self, matrix):
-        means = self.generateMeanPerLine(matrix)
-        for row in matrix:
-            for line in matrix[row]:
+    @staticmethod
+    def shiftByMean(matrix, means):
+        for row in range(len(matrix)):
+            for line in range(len(matrix[row])):
                 matrix[row][line] -= means[line]
         return matrix
 
-    def mlabPCA(self, matrix):
+    @staticmethod
+    def mlabPCA(matrix):
         # mlab's PCA expects a 2d numpy Array
         myData = numpy.array(matrix)
-        results = PCA(myData)
+        results = matplot_pca(myData)
 
-        #this will return an array of variance percentages for each component
-        results.fracs
+        # this will return an array of variance percentages for each component
+        # return results.fracs
 
-        #this will return a 2d array of the data projected into PCA space
-        results.Y
-
+        # this will return a 2d array of the data projected into PCA space
         return results.Y
-
