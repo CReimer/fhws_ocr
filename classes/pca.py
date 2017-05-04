@@ -1,3 +1,7 @@
+import numpy
+from matplotlib.mlab import PCA
+
+
 class PCA:
     def __init__(self):
         pass
@@ -38,3 +42,26 @@ class PCA:
             meansPerLine[line] /= len(matrix)
 
         return meansPerLine
+
+# __Flo's Part___
+
+    def shiftingByMean(self, matrix):
+        means = self.generateMeanPerLine(matrix)
+        for row in matrix:
+            for line in matrix[row]:
+                matrix[row][line] -= means[line]
+        return matrix
+
+    def mlabPCA(self, matrix):
+        # mlab's PCA expects a 2d numpy Array
+        myData = numpy.array(matrix)
+        results = PCA(myData)
+
+        #this will return an array of variance percentages for each component
+        results.fracs
+
+        #this will return a 2d array of the data projected into PCA space
+        results.Y
+
+        return results.Y
+
