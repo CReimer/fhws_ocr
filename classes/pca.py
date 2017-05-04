@@ -43,7 +43,7 @@ class PCA:
 
         return meansPerLine
 
-# Flo's Part___
+# __Flo's Part___
 
     def shiftingByMean(self, matrix):
         means = self.generateMeanPerLine(matrix)
