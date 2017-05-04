@@ -57,6 +57,7 @@ class PCA:
     def mlabPCA(matrix):
         # mlab's PCA expects a 2d numpy Array
         myData = numpy.array(matrix)
+        myData = myData.T  # We have to transpose the matrix here. Matplot expects [line][row] and we have [row][line]
         results = matplot_pca(myData)
 
         # this will return an array of variance percentages for each component
