@@ -1,5 +1,6 @@
 import numpy
 from matplotlib.mlab import PCA as matplot_pca
+from classes.database import Database
 
 
 class PCA:
@@ -14,7 +15,16 @@ class PCA:
         means = self.generateMeanPerLine(matrix)
         newMatrix = self.shiftByMean(matrix, means)
         pcaResult = self.mlabPCA(newMatrix)
+
+        database = Database()
+        database.add(char, 'pca', pcaResult)
+
         print(pcaResult)
+
+    @staticmethod
+    def compareChar():
+        # TODO
+        return True
 
     @staticmethod
     def generateRowVector(img):
