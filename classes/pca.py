@@ -1,5 +1,7 @@
 import numpy
-from matplotlib.mlab import PCA
+import cv2
+from matplotlib.mlab import PCA as matplot_pca
+from classes.database import Database
 
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -14,7 +16,31 @@ class PCA:
         for img in img_arr:
             matrix.append(self.generateRowVector(img))
 
-        self.generateMeanPerLine(matrix)
+        means = self.generateMeanPerLine(matrix)
+        newMatrix = self.shiftByMean(matrix, means)
+        pcaResult = self.mlabPCA(newMatrix)
+
+        database = Database()
+        database.add(char, 'pca', pcaResult)
+
+        print(pcaResult)
+
+    def trainCharOcv(self, char, img_arr):
+        matrix2 = []
+        # matrix = []  # Will be multidimensional -> [rows][lines]
+        for img in img_arr:
+            imgvector = img.flatten()  # array to vector
+            try:
+                matrix2 = numpy.vstack((matrix2, imgvector))  # append vertically to matrix
+            except:
+                matrix2 = imgvector  # No matrix? Well our vector starts the new matrix
+
+        self.CvPca(matrix2)
+
+    @staticmethod
+    def compareChar():
+        # TODO
+        return True
 
     @staticmethod
     def generateRowVector(img):
@@ -46,29 +72,33 @@ class PCA:
 
         return meansPerLine
 
-# __Flo's Part___
-
-    def shiftingByMean(self, matrix):
-        means = self.generateMeanPerLine(matrix)
-        for row in matrix:
-            for line in matrix[row]:
+    @staticmethod
+    def shiftByMean(matrix, means):
+        for row in range(len(matrix)):
+            for line in range(len(matrix[row])):
                 matrix[row][line] -= means[line]
         return matrix
 
-    def mlabPCA(self, matrix):
+    def CvPca(self, matrix):
+        mean, eigenvectors = cv2.PCACompute(matrix, mean=numpy.array([]))
+        print(mean)
+        print(eigenvectors)
+
+    @staticmethod
+    def mlabPCA(matrix):
         # mlab's PCA expects a 2d numpy Array
         myData = numpy.array(matrix)
-        results = PCA(myData)
+        myData = myData.T  # We have to transpose the matrix here. Matplot expects [line][row] and we have [row][line]
+        results = matplot_pca(myData)
 
-        #this will return an array of variance percentages for each component
-        results.fracs
+        # this will return an array of variance percentages for each component
+        # return results.fracs
 
-        #this will return a 2d array of the data projected into PCA space
-        results.Y
+        # this will return a 2d array of the data projected into PCA space
+        return results
 
-        return results.Y
-
-    def plotPCA(self, result):
+    @staticmethod
+    def plotPCA(result):
         x = []
         y = []
         z = []
@@ -91,7 +121,7 @@ class PCA:
                      (0, 0))  # 2 points make the y-axis line at the data extrema along y-axis
         ax.plot(yAxisLine[0], yAxisLine[1], yAxisLine[2], 'r')  # make a red line for the y-axis.
         zAxisLine = ((0, 0), (0, 0), (
-        min(pltData[2]), max(pltData[2])))  # 2 points make the z-axis line at the data extrema along z-axis
+            min(pltData[2]), max(pltData[2])))  # 2 points make the z-axis line at the data extrema along z-axis
         ax.plot(zAxisLine[0], zAxisLine[1], zAxisLine[2], 'r')  # make a red line for the z-axis.
 
         # label the axes

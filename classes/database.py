@@ -30,3 +30,9 @@ class Database:
     def loadDatabase(self):
         with open('data.json', 'r') as fp:
             self.data = json.load(fp)
+
+    def emptyWholeChar(self, char):
+        self.data[char] = dict()
+
+    def emptyTypeInChar(self, char, type):
+        self.data[char][type] = None

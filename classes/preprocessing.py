@@ -1,4 +1,5 @@
 import cv2
+import numpy
 
 
 class Preprocessing:
@@ -18,7 +19,8 @@ class Preprocessing:
         block_size = 11  # decides the size of neighbourhood area
         c = -10  # a constant which is subtracted from the mean or weighted mean
         print("Binarising image")
-        img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
+        ret, img = cv2.threshold(self.img, 127, 255, cv2.THRESH_BINARY)
+        # img = cv2.adaptiveThreshold(self.img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, block_size, c)
 
         # Check if inversion is necessary
         black = 0
@@ -30,46 +32,80 @@ class Preprocessing:
                 else:
                     black += 1
 
-        if black > white:
+        if black < white:
             img = (255 - img)
 
             self.img = img
 
     # Trennung an Spalten mit 0 Pixeln
-    def splitChars(self, occupancyThres=0):
+    def splitChars(self):
         print("Splitting characters")
-
-        # Zähle genutze Pixel in allen Spalten
-        rowOccupancy = [None] * self.rows
-        for row in range(self.rows):
-            singleOcc = 0
-            for line in range(self.lines):
-                if self.img[line][row] == 0:
-                    singleOcc += 1
-            rowOccupancy[row] = singleOcc
-
         chars = []
-        cur_row = -1
+
+        rowOccupancy = [0] * self.rows
+        for row in range(self.rows):
+            for line in range(self.lines):
+                if self.img[line][row] == 255:
+                    rowOccupancy[row] += 1
+
         start_row = None
         end_row = None
-        while cur_row < self.rows:
-            cur_row += 1
-            if start_row and end_row:
-                chars.append(self.img[0:self.lines, start_row:end_row])
+        for row in range(len(rowOccupancy)):
+            if start_row:
+                if not rowOccupancy[row]:
+                    end_row = row
+            else:
+                if rowOccupancy[row]:
+                    start_row = row
 
+            if start_row and end_row:
+                img = self.splitTopBottom(self.img[0:self.lines, start_row:end_row])
+                chars.append(img)
+
+                # Reset
                 start_row = None
                 end_row = None
 
-                continue
-
-            try:
-                if start_row:
-                    if rowOccupancy[cur_row] <= occupancyThres:
-                        end_row = cur_row
-                else:
-                    if rowOccupancy[cur_row] > occupancyThres:
-                        start_row = cur_row
-            except IndexError:
-                break
-
         return chars
+
+    def splitTopBottom(self, img):
+        (lines, rows) = img.shape
+
+        lineOccupancy = [0] * self.lines
+        for line in range(lines):
+            for row in range(rows):
+                if img[line][row] == 255:
+                    lineOccupancy[line] += 1
+
+        start_line = None
+        end_line = None
+        for line in range(len(lineOccupancy)):
+            if start_line:
+                if not lineOccupancy[line]:
+                    end_line = line
+            else:
+                if lineOccupancy[line]:
+                    start_line = line
+            if start_line and end_line:
+                return img[start_line:end_line, 0:rows]
+
+    def skelettizeImg(self):
+        skel = numpy.zeros(self.img.shape, numpy.uint8)  # Initialize empty skeleton
+        element = cv2.getStructuringElement(cv2.MORPH_CROSS, (3, 3))  # Define erode and dilate behaviour
+        size = numpy.size(self.img)  # Pixel count
+        black_pixels = 0  # Initialize with zero
+
+        # Break if there are only black pixels (background)
+        while not black_pixels == size:
+            eroded = cv2.erode(self.img, element)  # Slim picture down by one pixel
+            dilated = cv2.dilate(eroded, element)  # Use slimmed down picture and increase thickness by one pixel
+            # With this process we have removed possible unique features of a character
+
+            remain = cv2.subtract(self.img,
+                                  dilated)  # Subtract dilated img from source img. Only unique features remain here
+            skel = cv2.bitwise_or(skel, remain)  # Append these unique features to our skeleton image
+            self.img = eroded.copy()  # Use the slimmed down picture for next loop run
+
+            black_pixels = size - cv2.countNonZero(self.img)  # Number of black pixels
+
+        self.img = skel
