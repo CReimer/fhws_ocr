@@ -38,11 +38,10 @@ serif_chars = preprocess.splitChars()
 # tools.showImage(serif_chars[0])
 
 
-
 char_values = string.ascii_uppercase + string.ascii_lowercase
 for i in range(len(char_values)):
     pca = PCA()
-    pca.trainChar(char_values[i], [sans_chars[i], sans_chars[i]])
+    pca.trainCharOcv(char_values[i], [sans_chars[i], sans_chars[i]])
 
 exit()
 
