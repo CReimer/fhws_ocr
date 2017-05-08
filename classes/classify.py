@@ -14,13 +14,13 @@ class Classify:
 
     @staticmethod
     def myKnn(matrix, compareVector):
-        compareVector = numpy.array(compareVector)
+        compareVector = numpy.array(compareVector)  # holding Incoming Value
 
         shortestDistance = 99999
 
         for row in matrix:
             currentVector = numpy.array(row)
-            distance = numpy.linalg.norm(currentVector - compareVector)
+            distance = numpy.linalg.norm(currentVector - compareVector)  # numpy provides method for euclidean distance
             if shortestDistance > distance:
                 nextNeighbour = row
                 shortestDistance = distance
