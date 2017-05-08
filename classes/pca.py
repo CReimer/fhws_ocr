@@ -1,10 +1,10 @@
 import numpy
 import cv2
-from matplotlib.mlab import PCA as matplot_pca
+#from matplotlib.mlab import PCA as matplot_pca
 from classes.database import Database
 
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.mplot3d import Axes3D
 
 
 class PCA:

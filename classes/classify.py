@@ -1,8 +1,9 @@
 
-
+import numpy
 
 from classes.featureExtraction import FeatureExtraction
 from classes.database import Database
+
 
 class Classify:
     def __init__(self, img):    # copied from Pre-Processing
@@ -11,7 +12,22 @@ class Classify:
         self.rows = len(img[0])
         self.lines = len(img)
 
-    def compare_with_database_pixelaverage(self):   # muss man hier schon details zur datenbank anhängen?
+    @staticmethod
+    def myKnn(matrix, compareVector):
+        compareVector = numpy.array(compareVector)
+
+        shortestDistance = 99999
+
+        for row in matrix:
+            currentVector = numpy.array(row)
+            distance = numpy.linalg.norm(currentVector - compareVector)
+            if shortestDistance > distance:
+                nextNeighbour = row
+                shortestDistance = distance
+
+        return nextNeighbour
+
+    def compare_with_database_pixelAverage(self):   # muss man hier schon details zur Datenbank anhängen?
         print("Start Comparing")
 
         extractor = FeatureExtraction(self.img)
@@ -47,11 +63,10 @@ class Classify:
                     third_hit = abs(value - incoming_average)
                     third_key = key
 
-
-        error = 2   # fehler toleranz (evtl nett... war ne idee ^^")
+        error = 2   # Fehlertoleranz (evtl nett... war ne Idee ^^")
 
         if third_hit-second_hit <= error and second_hit-best_hit <= error:
-            if second_key == third_key:             # keys dieser beiden, nicht die vergleichswerte selbst
+            if second_key == third_key:             # keys dieser beiden, nicht die Vergleichswerte selbst
                 key_of_incoming_average = second_key
             else:
                 key_of_incoming_average = best_key
