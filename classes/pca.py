@@ -29,13 +29,14 @@ class PCA:
         matrix2 = []
         # matrix = []  # Will be multidimensional -> [rows][lines]
         for img in img_arr:
-            imgvector = img.flatten()  # array to vector
+            # imgvector = img.flatten()  # array to vector
+            imgvector = numpy.array(self.generateRowVector(img))  # Use own implementation
             try:
                 matrix2 = numpy.vstack((matrix2, imgvector))  # append vertically to matrix
             except:
                 matrix2 = imgvector  # No matrix? Well our vector starts the new matrix
 
-        self.CvPca(matrix2)
+        print(char + ': ' + str(self.CvPca(matrix2)))
 
     @staticmethod
     def compareChar():
@@ -81,8 +82,10 @@ class PCA:
 
     def CvPca(self, matrix):
         mean, eigenvectors = cv2.PCACompute(matrix, mean=numpy.array([]))
-        print(mean)
-        print(eigenvectors)
+
+        return mean[0][0]
+        # print(mean[0][0])
+        # print(eigenvectors)
 
     @staticmethod
     def mlabPCA(matrix):
