@@ -36,16 +36,31 @@ serif_chars = preprocess.splitChars()
 #     if i is not None:
 #         tools.showImage(i)
 # tools.showImage(serif_chars[0])
+# tools.writeImage(serif_chars[0], 'out1.jpg')
+
+
+# preprocess2 = Preprocessing(serif_chars[0])
+# preprocess2.binariseImg()
+# preprocess2.skelettizeImg()
+# tools.writeImage(preprocess2.img, 'out2.jpg')
+#
+# img3 = cv2.imread('Unbenannt.png', cv2.IMREAD_GRAYSCALE)
+# preprocess2 = Preprocessing(img3)
+# preprocess2.binariseImg()
+# preprocess2.skelettizeImg()
+# tools.writeImage(preprocess2.img, 'out3.jpg')
 
 
 char_values = string.ascii_uppercase + string.ascii_lowercase
+pca = PCA()
 for i in range(len(char_values)):
-    pca = PCA()
-    pca.trainCharOcv(char_values[i], [serif_chars[i], sans_chars[i]])
+    pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+pca.fixedVectorLength()
+pca.pca()
 
 exit()
 
-# tools.showImage(chars[2])
+#
 # preprocess.binariseImg()
 # img = preprocess.img
 # tools.showImage(img, "Before")
