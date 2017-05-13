@@ -15,11 +15,6 @@ class PCA:
             # self.matrix = numpy.vstack((self.matrix, imgvector))  # append vertically to matrix
 
     @staticmethod
-    def compareChar():
-        # TODO
-        return True
-
-    @staticmethod
     def generateRowVector(img):
         (lines, rows) = img.shape
         rowvector = []
@@ -28,33 +23,30 @@ class PCA:
                 rowvector.append(img[line][row])
         return rowvector
 
-    @staticmethod
-    def generateMeanPerLine(matrix):
+    def generateMeanPerLine(self):
         longestLine = 0
-        for row in matrix:
+        for row in self.matrix:
             if len(row) > longestLine:
                 longestLine = len(row)
         meansPerLine = [0.0] * longestLine
 
-        for row in range(len(matrix)):
+        for row in range(len(self.matrix)):
             for line in range(longestLine):
                 try:
-                    if matrix[row][line]:
-                        meansPerLine[line] += matrix[row][line]
+                    if self.matrix[row][line]:
+                        meansPerLine[line] += self.matrix[row][line]
                 except IndexError or TypeError:
                     pass
 
         for line in range(len(meansPerLine)):
-            meansPerLine[line] /= len(matrix)
+            meansPerLine[line] /= len(self.matrix)
 
         return meansPerLine
 
-    @staticmethod
-    def shiftByMean(matrix, means):
-        for row in range(len(matrix)):
-            for line in range(len(matrix[row])):
-                matrix[row][line] -= means[line]
-        return matrix
+    def shiftByMean(self, means):
+        for row in range(len(self.matrix)):
+            for line in range(len(self.matrix[row])):
+                self.matrix[row][line] -= means[line]
 
     def fixedVectorLength(self):
         maxLength = 0
