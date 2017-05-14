@@ -67,7 +67,16 @@ class PCA:
 
     def pca(self):
         matrix = numpy.array(self.matrix)
-        mean, eigenvectors = cv2.PCACompute(matrix, mean=numpy.array([]))
+        # matrix = numpy.transpose(matrix)
 
-        print(eigenvectors)
-        print(mean)
+        cov = numpy.dot(matrix, matrix.T)
+        eigvals, eigvecs = numpy.linalg.eig(cov)
+
+        eig_pairs = [(numpy.abs(eigvals[i]), eigvecs[:, i]) for i in range(len(eigvals))]
+        eig_pairs.sort(key=lambda x: x[0], reverse=True)
+
+        for i in range(len(eig_pairs)):
+            if eig_pairs[i][0] > 1:
+                print(str(i) + ' ' + str(eig_pairs[i][0]))
+
+
