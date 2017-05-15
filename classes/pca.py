@@ -67,16 +67,20 @@ class PCA:
 
     def pca(self):
         matrix = numpy.array(self.matrix)
-        # matrix = numpy.transpose(matrix)
 
-        cov = numpy.dot(matrix, matrix.T)
-        eigvals, eigvecs = numpy.linalg.eig(cov)
+        from matplotlib.mlab import PCA as mlabPCA
+        from matplotlib import pyplot as plt
+        mlab_pca = mlabPCA(matrix.T)
 
-        eig_pairs = [(numpy.abs(eigvals[i]), eigvecs[:, i]) for i in range(len(eigvals))]
-        eig_pairs.sort(key=lambda x: x[0], reverse=True)
+        plt.plot(mlab_pca.Y.T[0:2, 0], mlab_pca.Y[0:2, 1], 'o', markersize=7, color='blue', alpha=0.5, label='A')
+        plt.plot(mlab_pca.Y.T[2:4, 0], mlab_pca.Y[2:4, 1], '^', markersize=7, color='red', alpha=0.5, label='B')
+        plt.plot(mlab_pca.Y.T[4:6, 0], mlab_pca.Y[4:6, 1], '^', markersize=7, color='yellow', alpha=0.5, label='C')
+        plt.plot(mlab_pca.Y.T[6:8, 0], mlab_pca.Y[6:8, 1], '^', markersize=7, color='green', alpha=0.5, label='D')
 
-        for i in range(len(eig_pairs)):
-            if eig_pairs[i][0] > 1:
-                print(str(i) + ' ' + str(eig_pairs[i][0]))
+        plt.xlabel('x_values')
+        plt.ylabel('y_values')
+        # plt.xlim([-4, 4])
+        # plt.ylim([-4, 4])
+        plt.legend()
 
-
+        plt.show()
