@@ -2,6 +2,8 @@
 import string
 
 import cv2
+import numpy as np
+
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
 from classes.database import Database
@@ -52,13 +54,29 @@ serif_chars = preprocess.splitChars()
 
 
 char_values = string.ascii_uppercase + string.ascii_lowercase
+
 pca = PCA()
+
 for i in range(len(char_values)):
     pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+
 pca.fixedVectorLength()
-means = pca.generateMeanPerLine()
-pca.shiftByMean(means)
+
+mean_vector = pca.generateMeanPerLine()
+
+pca.shiftByMean(mean_vector)
 pca.pca()
+
+char_values = 'A'
+pca2 = PCA()
+
+for i in range(len(char_values)):
+    pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+
+pca2.fixedVectorLength()
+
+pca2.shiftByMean(mean_vector)
+pca2.pca()
 
 exit()
 
