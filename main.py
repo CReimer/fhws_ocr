@@ -60,8 +60,6 @@ pca = PCA()
 for i in range(len(char_values)):
     pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
 
-pca.fixedVectorLength()
-
 mean_vector = pca.generateMeanPerLine()
 
 pca.shiftByMean(mean_vector)
@@ -71,9 +69,7 @@ char_values = 'A'
 pca2 = PCA()
 
 for i in range(len(char_values)):
-    pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
-
-pca2.fixedVectorLength()
+    pca2.trainChar(char_values[i], [serif_chars[i], serif_chars[i]])
 
 pca2.shiftByMean(mean_vector)
 pca2.pca()
