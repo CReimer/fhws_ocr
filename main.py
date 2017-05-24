@@ -2,12 +2,14 @@
 import string
 
 import cv2
+import numpy
 import numpy as np
 
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
 from classes.database import Database
 from classes.pca import PCA
+from scipy import linalg as LA
 
 tools = Tools()
 # database = Database()
@@ -60,18 +62,20 @@ pca = PCA()
 for i in range(len(char_values)):
     pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
 
-mean_vector = pca.generateMeanPerLine()
+# mean_vector = pca.generateMeanPerLine()
+mean_vector = numpy.mean(pca.matrix, 0)
+pca.matrix -= mean_vector
+# pca.shiftByMean(mean_vector)
 
-pca.shiftByMean(mean_vector)
 pca.pca()
 
-char_values = 'A'
+char_values = string.ascii_uppercase
 pca2 = PCA()
 
 for i in range(len(char_values)):
-    pca2.trainChar(char_values[i], [serif_chars[i], serif_chars[i]])
+    pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
 
-pca2.shiftByMean(mean_vector)
+pca2.matrix -= mean_vector
 pca2.pca()
 
 exit()
