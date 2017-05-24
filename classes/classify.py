@@ -13,7 +13,7 @@ class Classify:
         self.lines = len(img)
 
     @staticmethod
-    def myKnn(matrix, compareVector):
+    def myKnn(matrix, compareVector):       # fail... das is kein knn... nur ein nn
         compareVector = numpy.array(compareVector)  # holding Incoming Value
 
         shortestDistance = 99999
@@ -26,6 +26,73 @@ class Classify:
                 shortestDistance = distance
 
         return nextNeighbour
+
+    @staticmethod
+    def myTrueKnn(matrix, compareVector, k):
+        compareVector = numpy.array(compareVector)  # holding Incoming Value
+        distances = []
+        neighbours = []
+
+        def getKey(item):       # http://pythoncentral.io/how-to-sort-a-list-tuple-or-object-with-sorted-in-python/
+            return item[1]
+
+        for row in matrix:
+            currentVector = numpy.array(row)
+            distance = numpy.linalg.norm(currentVector - compareVector)  # numpy provides method for euclidean distance
+            distances.append(matrix[row], distance)
+
+        distances.sort(key=getKey)      # (jup, selber url wie oben bei getKey)
+                                        # http://pythoncentral.io/how-to-sort-a-list-tuple-or-object-with-sorted-in-python/
+
+        for x in range(k):
+            neighbours.append(distances[x][0])
+
+        return neighbours
+
+
+
+    @staticmethod
+    def crispKnn(matrix, compareVector, k):
+        if 1 <= k <= matrix.length():       # haben wir length?
+            return
+
+        compareVector = numpy.array(compareVector)  # holding Incoming Value
+        distances = []
+        neighbours = []
+
+        def getKey(item):
+            return item[1]
+
+        for row in matrix:
+            currentVector = numpy.array(row)
+            distance = numpy.linalg.norm(currentVector - compareVector)
+            distances.append(matrix[row], distance)
+
+        distances.sort(key=getKey)
+
+        for x in range(k):
+            neighbours.append(distances[x][0])
+
+        # hier gibts ein kleines problem. wir brauchen label für die buchstaben-vektoren
+        # pseudocode, wie es aussehen sollte, ab hier
+
+        labels = []
+
+        for label in neighbours:
+            labels.append(neighbours[label])    # wie finden wir den buchstaben, den der vektor repräsentiert?
+
+        mostFrequentLabelCount = 0
+
+        for a in labels:
+            count = 0
+            for b in labels:
+                if b == a:
+                    count = count + 1
+            if mostFrequentLabelCount < count:
+                mostFrequentLabel = a
+                mostFrequentLabelCount = count
+
+        return mostFrequentLabel        # evtl mehr / was anderes zurück geben... atm erstmal das label.
 
     def compare_with_database_pixelAverage(self):   # muss man hier schon details zur Datenbank anhängen?
         print("Start Comparing")
