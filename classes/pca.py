@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import cv2
 from scipy.sparse.linalg import eigs, eigsh
 
@@ -55,39 +55,12 @@ class PCA:
                 self.matrix[row][line] -= means[line]
 
     def pca(self):
-        dimensions = 3
-        # mean_vector = numpy.array(mean_vector)
-        matrix = numpy.array(self.matrix)
-        # a = 1.0 / matrix.shape[0]
-        b = numpy.cov(matrix, rowvar=False)
-        # c = numpy.mean(matrix.T, 0) * numpy.mean(matrix, 1)
+        dimensions = 6
+        # DO NOT TOUCH THIS!! This switches our column-first data to line-first data, as expected by numpy
+        matrix = np.array(self.matrix).T
 
-        evals, evecs = eigsh(b)
+        q = 1.0 / matrix.shape[1] * np.cov(matrix.T, rowvar=False) - np.matmul(np.mean(matrix, 0), np.mean(matrix, 0).T)
 
-        idx = numpy.argsort(evals)[::-1]
-        evecs = evecs[:, idx]
-        evals = evals[idx]
+        ew, ev = eigs(q, k=dimensions)
 
-        evecs = evecs[:, :dimensions]
-
-        merkmale = numpy.dot(evecs.T, matrix.T).T
-
-        print(merkmale[0])
-        print(merkmale[1])
-
-        # q = a * b - c
-
-        # ew, ev = numpy.linalg.eig(kernel_matrix)
-
-        # ew, ev = eigs(q, k=4)
-
-        # eig_val_cov = ew
-        # eig_vec_cov = ev
-        # merkmale = ev.T * matrix
-
-        # eig_pairs = [(numpy.abs(eig_val_cov[i]), eig_vec_cov[:, i]) for i in range(len(eig_val_cov))]
-        # eig_pairs.sort(key=lambda x: x[0], reverse=True)
-
-        # print(eig_pairs[0][1][0])
-        # print(eig_pairs[1][1][0])
-        # print(eig_pairs[2][1][0])
+        return np.matmul(ev.T, matrix)

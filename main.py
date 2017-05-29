@@ -11,6 +11,7 @@ from classes.database import Database
 from classes.pca import PCA
 from scipy import linalg as LA
 
+
 tools = Tools()
 # database = Database()
 # database.initializeEmpty()
@@ -67,16 +68,20 @@ mean_vector = numpy.mean(pca.matrix, 0)
 pca.matrix -= mean_vector
 # pca.shiftByMean(mean_vector)
 
-pca.pca()
+# Merkmale für alle Buchstaben in Reihenfolge wie in char_values
+pca_merkmale = pca.pca()
 
-char_values = string.ascii_uppercase
+char_values = 'Aa'
 pca2 = PCA()
 
 for i in range(len(char_values)):
-    pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+    # pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+    pca2.testChar(char_values[i], serif_chars[i])
 
 pca2.matrix -= mean_vector
-pca2.pca()
+
+# Merkmale für alle Buchstaben in Reihenfolge wie in char_values. Einzelne Buchstaben funktioniert nicht. Rücksprache mit Fetzer nötig.
+pca2_merkmale = pca2.pca()
 
 exit()
 
@@ -85,10 +90,9 @@ exit()
 # img = preprocess.img
 # tools.showImage(img, "Before")
 
-# chars = preprocess.splitChars()
 # preprocess.skelettizeImg()
 # tools.showImage(preprocess.img)
 # tools.writeImage(preprocess.img, "test.png")
 
-for idx in range(len(chars)):
-    tools.writeImage(chars[idx], "single" + str(idx) + '.jpg')
+# for idx in range(len(chars)):
+#     tools.writeImage(chars[idx], "single" + str(idx) + '.jpg')
