@@ -4,16 +4,17 @@ import string
 import cv2
 import numpy
 import numpy as np
+import math
 
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
 from classes.database import Database
 from classes.pca import PCA
+from classes.peak import Peak
 from scipy import linalg as LA
 
-
 tools = Tools()
-# database = Database()
+database = Database()
 # database.initializeEmpty()
 
 # database.loadDatabase()
@@ -59,24 +60,32 @@ serif_chars = preprocess.splitChars()
 char_values = string.ascii_uppercase + string.ascii_lowercase
 
 pca = PCA()
+# peak = Peak()
 
 for i in range(len(char_values)):
     pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
+    # peak.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
 
-# mean_vector = pca.generateMeanPerLine()
-mean_vector = numpy.mean(pca.matrix, 0)
+mean_vector = numpy.mean(pca.matrix, 0)  # MERKEN!!
+database.add('', 'pca_mean', list(mean_vector))
 pca.matrix -= mean_vector
-# pca.shiftByMean(mean_vector)
 
 # Merkmale für alle Buchstaben in Reihenfolge wie in char_values
 pca_merkmale = pca.pca()
+for i in range(len(pca_merkmale.T)):
+    temp = list()
+    for j in list(pca_merkmale.T[i]):
+        temp.append(float(j))
 
-char_values = 'Aa'
+    database.add(char_values[math.floor(i / 2)], 'pca', temp)
+database.saveDatabase()
+
+char_values = 'A'
 pca2 = PCA()
 
 for i in range(len(char_values)):
-    # pca2.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
     pca2.testChar(char_values[i], serif_chars[i])
+    pca2.testChar(char_values[i], serif_chars[i])  # Zweimal als Workaround für Eigenwertanalyse
 
 pca2.matrix -= mean_vector
 
