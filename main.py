@@ -56,15 +56,14 @@ serif_chars = preprocess.splitChars()
 # preprocess2.skelettizeImg()
 # tools.writeImage(preprocess2.img, 'out3.jpg')
 
+#### Train Characters ####
 
 char_values = string.ascii_uppercase + string.ascii_lowercase
 
 pca = PCA()
-# peak = Peak()
 
 for i in range(len(char_values)):
     pca.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
-    # peak.trainChar(char_values[i], [serif_chars[i], sans_chars[i]])
 
 mean_vector = numpy.mean(pca.matrix, 0)  # MERKEN!!
 database.add('', 'pca_mean', list(mean_vector))
@@ -80,17 +79,23 @@ for i in range(len(pca_merkmale.T)):
     database.add(char_values[math.floor(i / 2)], 'pca', temp)
 database.saveDatabase()
 
+#### Character Test ####
+
 char_values = 'A'
 pca2 = PCA()
 
+mean_vector = numpy.array(database.read('', 'pca_mean'))
+
 for i in range(len(char_values)):
     pca2.testChar(char_values[i], serif_chars[i])
-    pca2.testChar(char_values[i], serif_chars[i])  # Zweimal als Workaround für Eigenwertanalyse
+    pca2.testChar(char_values[i], serif_chars[i])  # Zweimal als Workaround für Eigenwertanalyse TODO Warum eigentlich?
 
 pca2.matrix -= mean_vector
 
-# Merkmale für alle Buchstaben in Reihenfolge wie in char_values. Einzelne Buchstaben funktioniert nicht. Rücksprache mit Fetzer nötig.
-pca2_merkmale = pca2.pca()
+# PCA Werte des getesteten Chars liegen jetzt hier in pca2.matrix
+
+# Merkmale für alle Buchstaben in Reihenfolge wie in char_values. Einzelne Buchstaben funktioniert nicht.
+pca2_merkmale = pca2.pca() # Bei einem Buchstaben in char_values ist das hier eine 6x2 Matrix. 6 Zeilen, 2 Spalten. 2 Spalten wegen TODO von oben. Eigenwertanalyse schlägt fehl wenn nur ein Buchstabe getestet wird.
 
 exit()
 
