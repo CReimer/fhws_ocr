@@ -54,13 +54,16 @@ class PCA:
             for line in range(len(self.matrix[row])):
                 self.matrix[row][line] -= means[line]
 
-    def pca(self):
-        dimensions = 6
+    def generate_eigenvector(self, dimensions=6):
         # DO NOT TOUCH THIS!! This switches our column-first data to line-first data, as expected by numpy
         matrix = np.array(self.matrix).T
 
         q = 1.0 / matrix.shape[1] * np.cov(matrix.T, rowvar=False) - np.matmul(np.mean(matrix, 0), np.mean(matrix, 0).T)
-
         ew, ev = eigs(q, k=dimensions)
+        return ev
+
+    def pca(self, ev):
+        # DO NOT TOUCH THIS!! This switches our column-first data to line-first data, as expected by numpy
+        matrix = np.array(self.matrix).T
 
         return np.matmul(ev.T, matrix)
