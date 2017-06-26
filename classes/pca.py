@@ -58,7 +58,12 @@ class PCA:
         # DO NOT TOUCH THIS!! This switches our column-first data to line-first data, as expected by numpy
         matrix = np.array(self.matrix).T
 
+        #Kernmatrix Q. Güte für die Merkmale. Qualitätskriterium
+        # 1/Anzahl Bilder
+        # Gaussian, Polynomial, Hyperbolic tangent Kernels?!
         q = 1.0 / matrix.shape[1] * np.cov(matrix.T, rowvar=False) - np.matmul(np.mean(matrix, 0), np.mean(matrix, 0).T)
+
+        # ev ist orthonormales System
         ew, ev = eigs(q, k=dimensions)
         return ev
 

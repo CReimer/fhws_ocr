@@ -70,7 +70,8 @@ database.add('', 'pca_mean', list(mean_vector))
 pca.matrix -= mean_vector
 
 # Merkmale für alle Buchstaben in Reihenfolge wie in char_values
-pca_merkmale = pca.pca()
+eigenvector = pca.generate_eigenvector()
+pca_merkmale = pca.pca(eigenvector)
 for i in range(len(pca_merkmale.T)):
     temp = list()
     for j in list(pca_merkmale.T[i]):
@@ -88,14 +89,15 @@ mean_vector = numpy.array(database.read('', 'pca_mean'))
 
 for i in range(len(char_values)):
     pca2.testChar(char_values[i], serif_chars[i])
-    pca2.testChar(char_values[i], serif_chars[i])  # Zweimal als Workaround für Eigenwertanalyse TODO Warum eigentlich?
+    # pca2.testChar(char_values[i], serif_chars[i])  # Zweimal als Workaround für Eigenwertanalyse TODO Warum eigentlich?
 
 pca2.matrix -= mean_vector
 
 # PCA Werte des getesteten Chars liegen jetzt hier in pca2.matrix
 
 # Merkmale für alle Buchstaben in Reihenfolge wie in char_values. Einzelne Buchstaben funktioniert nicht.
-pca2_merkmale = pca2.pca() # Bei einem Buchstaben in char_values ist das hier eine 6x2 Matrix. 6 Zeilen, 2 Spalten. 2 Spalten wegen TODO von oben. Eigenwertanalyse schlägt fehl wenn nur ein Buchstabe getestet wird.
+pca2_merkmale = pca2.pca(
+    eigenvector)  # Bei einem Buchstaben in char_values ist das hier eine 6x2 Matrix. 6 Zeilen, 2 Spalten. 2 Spalten wegen TODO von oben. Eigenwertanalyse schlägt fehl wenn nur ein Buchstabe getestet wird.
 
 exit()
 
