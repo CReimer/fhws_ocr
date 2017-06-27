@@ -16,7 +16,11 @@ class Database:
         try:
             self.data[char][type].append(data)
         except KeyError:
-            self.data[char][type] = list()
+            try:
+                self.data[char][type] = list()
+            except KeyError:
+                self.data[char] = dict()
+                self.data[char][type] = list()
             self.data[char][type].append(data)
 
     def read(self, char, type):
