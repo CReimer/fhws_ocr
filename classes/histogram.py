@@ -1,6 +1,3 @@
-import cv2
-
-
 class Histogram:
     def __init__(self, img):
         print("Init Histogram")
@@ -8,9 +5,7 @@ class Histogram:
         self.rows = len(img[0])
         self.lines = len(img)
 
-    # Histogramm für die rows
-
-    def runterfallen(self):
+    def row_histogram(self):
 
         f = []
         for row in range(len(self.img)):
@@ -21,9 +16,7 @@ class Histogram:
             f.append(count)
         return f
 
-    # Histogramm für die lines
-
-    def zurseiterutschen(self):
+    def line_histogram(self):
 
         f = []
         for line in range(len(self.img)):
@@ -33,4 +26,3 @@ class Histogram:
                     count = count + 1
             f.append(count)
         return f
-#

@@ -50,12 +50,16 @@ class Preprocessing:
 
         start_row = None
         end_row = None
+
+        margin_percent = 0.1
+        margin = line / 100 * margin_percent
+
         for row in range(len(rowOccupancy)):
             if start_row:
-                if not rowOccupancy[row]:
+                if rowOccupancy[row] <= margin:
                     end_row = row
             else:
-                if rowOccupancy[row]:
+                if rowOccupancy[row] > margin:
                     start_row = row
 
             if start_row and end_row:

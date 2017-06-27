@@ -15,7 +15,7 @@ class PCA:
             imgvector = self.generateRowVector(resized)  # Use own implementation
             self.matrix.append(imgvector)
 
-    def testChar(self, char, img):
+    def testChar(self, img):
         resized = cv2.resize(img, (32, 32), interpolation=cv2.INTER_AREA)
         imgvector = self.generateRowVector(resized)  # Use own implementation
         self.matrix.append(imgvector)
