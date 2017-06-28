@@ -27,6 +27,24 @@ class Database:
         # Read 'data' of 'type' from some 'char'. Returns list()
         return self.data[char][type]
 
+    def readFeatureVectors(self):
+        featureVectors = {}
+        for char in self.data:
+            try:
+                featureVectors[char]
+            except KeyError:
+                featureVectors[char] = {}
+
+            try:
+                for i in range(len(self.data[char]['histogram'])):
+                    pixav = self.data[char]['pixelAv'][i]
+                    histo = sum(self.data[char]['histogram'][i], [])
+                    pca = self.data[char]['pca'][i]
+                    featureVectors[char][i] = [pixav] + histo + pca
+            except KeyError:
+                pass
+        return featureVectors
+
     def saveDatabase(self):
         with open('data.json', 'w') as fp:
             json.dump(self.data, fp)
