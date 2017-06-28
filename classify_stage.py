@@ -34,8 +34,7 @@ splitted_chars = preprocess.splitChars()
 
 # Histogram
 histogram2 = Histogram(splitted_chars[0])
-histogram2.row_histogram()
-histogram_merkmale = histogram2.line_histogram()
+histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
 
 # Pixel Average
 pix_av2 = FeatureExtraction(splitted_chars[0])
@@ -49,3 +48,9 @@ pca2.matrix -= numpy.array(database.read('common', 'pca_mean'))  # Mean Vector a
 pca_merkmale = pca2.pca(
     numpy.array(database.read('common',
                               'pca_eig')[0]))
+temp = list()
+for j in list(pca_merkmale.T[0]):
+    temp.append(float(j))
+
+featureVector = [pix_av_merkmale] + histogram_merkmale + temp
+print(featureVector)

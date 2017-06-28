@@ -71,7 +71,7 @@ for i in range(len(pca_merkmale.T)):
     for j in list(pca_merkmale.T[i]):
         temp.append(float(j))
 
-    database.add(char_values[math.floor(i / 2)], 'pca', temp)
+    database.add(char_values[math.floor(i / len(splitted_t_set))], 'pca', temp)
 
 # Datenbank speichern
 database.saveDatabase()
