@@ -1,16 +1,62 @@
 
 import numpy
 
-from classes.featureExtraction import FeatureExtraction
 from classes.database import Database
 
 
 class Classify:
-    def __init__(self, img):    # copied from Pre-Processing
-        print("Init Classification")
-        self.img = img
-        self.rows = len(img[0])
-        self.lines = len(img)
+
+    @staticmethod
+    def crispKnn(compareVector, k):     # knn ohne Membership. Sollte so funktionieren
+        database = Database()
+        database.loadDatabase()
+
+        labeledVectors = []
+
+        featureVectors = database.readFeatureVectors()
+        for char in featureVectors:
+            for char_vector_count in featureVectors[char]:
+                oneLabeledVector = []
+                oneLabeledVector.append(char)       # label merken
+                oneLabeledVector.append(char_vector_count)  # Merkmalsvector merken
+
+                labeledVectors.append(oneLabeledVector)     # den einen gelabelten vector in die Sammlung werfen.
+
+        compareVector = numpy.array(compareVector)  # hält eingehenden Merkmalsvector als numpy Array
+        distances = []
+        neighbours = []
+
+        def getKey(item):   # wird genutzt um nach Distanz zu sortieren
+            return item[1]
+
+        # durchläuft alle Merkmalsvectoren der db und berechnet ihre distanz zum neuen Wert
+        for entry in labeledVectors:
+            currentVector = numpy.array(entry[1])     # entry[1], weil dort der Merkmalsvector ist
+            distance = numpy.linalg.norm(currentVector - compareVector)
+            distances.append(labeledVectors[entry], distance)
+            # jetzt enthält distances alle gelabelten merkmalsvectoren
+            # und bei jedem der Vectoren steht die distanz zum neuen wert
+
+        distances.sort(key=getKey)  # sortiere nach der errechneten distanz
+
+        i = 0
+
+        for x in range(k):      # nehme nur die k nächsten Nachbarn
+            neighbours.append(distances[i])
+            i += 1
+
+        mostFrequentLabelCount = 0
+
+        for a in neighbours:    # zähle welches Label das häufigste ist
+            count = 0
+            for b in neighbours:
+                if b[0] == a[0]:    # 0, da dort das label gespeichert ist
+                    count = count + 1
+            if mostFrequentLabelCount < count:
+                mostFrequentLabel = a[0]
+                mostFrequentLabelCount = count
+
+        print(mostFrequentLabel)
 
     @staticmethod
     def classifyTrainingSetSimple(matrix):
@@ -64,7 +110,7 @@ class Classify:
             matrix[row].append(classMembership)
 
     @staticmethod
-    def fuzzyKnn(matrix, compareVector, k):
+    def fuzzyKnn(matrix, compareVector, k):     #sicherheitshalber noch nicht verwenden
         if 1 <= k <= matrix.length():       # haben wir length?
             return
 
