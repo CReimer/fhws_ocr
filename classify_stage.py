@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import string
 import cv2
 import numpy
 
@@ -16,6 +17,9 @@ database.loadDatabase()
 
 ## CLASSIFICATION
 
+char_values = string.ascii_uppercase + string.ascii_lowercase  # Expected characters in Trainings Set
+for char in char_values:
+    featureVector = database.readFeatureVector(char)
 
 # Testbild wird hier geladen und auf gleiche Weise durch Preprocessing gejagt
 img = cv2.imread('trainingdata/Serif.png', cv2.IMREAD_GRAYSCALE)

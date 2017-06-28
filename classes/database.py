@@ -27,6 +27,10 @@ class Database:
         # Read 'data' of 'type' from some 'char'. Returns list()
         return self.data[char][type]
 
+    def readFeatureVector(self, char):
+        return sum(self.data[char]['pca'], []) + sum(sum(self.data[char]['histogram'], []), []) + self.data[char][
+            'pixelAv']
+
     def saveDatabase(self):
         with open('data.json', 'w') as fp:
             json.dump(self.data, fp)
