@@ -16,10 +16,11 @@ database = Database()
 database.loadDatabase()
 
 ## CLASSIFICATION
-
-char_values = string.ascii_uppercase + string.ascii_lowercase  # Expected characters in Trainings Set
-for char in char_values:
-    featureVector = database.readFeatureVector(char)
+featureVectors = database.readFeatureVectors()
+for char in featureVectors:
+    for char_vector_count in featureVectors[char]:
+        membershipvalue = 0
+        database.add("common", 'featureMembership', [[char, char_vector_count], membershipvalue])
 
 # Testbild wird hier geladen und auf gleiche Weise durch Preprocessing gejagt
 img = cv2.imread('trainingdata/Serif.png', cv2.IMREAD_GRAYSCALE)
