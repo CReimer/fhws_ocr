@@ -19,8 +19,11 @@ database.loadDatabase()
 featureVectors = database.readFeatureVectors()
 for char in featureVectors:
     for char_vector_count in featureVectors[char]:
-        membershipvalue = 0
-        database.add("common", 'featureMembership', [[char, char_vector_count], membershipvalue])
+        membershipvalue = 0  # Example value
+        database.add("featureMembership", char + str(char_vector_count),
+                     membershipvalue)  # Write to database. Don't forget to save database with database.saveDatabase()
+
+        membershipvalue = database.read("featureMembership", char + str(char_vector_count))  # Read back from database.
 
 # Testbild wird hier geladen und auf gleiche Weise durch Preprocessing gejagt
 img = cv2.imread('trainingdata/Serif.png', cv2.IMREAD_GRAYSCALE)
