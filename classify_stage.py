@@ -54,6 +54,8 @@ for j in list(pca_merkmale.T[0]):
     temp.append(float(j))
 
 featureVector = [pix_av_merkmale] + histogram_merkmale + temp
+classify = Classify()
+classify.crispKnn(featureVectors, 5)
 print(featureVector)
 
 Classify.crispKnn(featureVector, 3)

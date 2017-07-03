@@ -23,7 +23,7 @@ splitted_t_set = []
 
 for t_set in glob.glob('./trainingdata/*.png'):
     print("Reading image: " + t_set)
-    img = cv2.imread('trainingdata/Sans.png', cv2.IMREAD_GRAYSCALE)
+    img = cv2.imread(t_set, cv2.IMREAD_GRAYSCALE)
     preprocess = Preprocessing(img)
     preprocess.binariseImg()
     splitted_chars = preprocess.splitChars()
