@@ -10,6 +10,7 @@ from classes.database import Database
 from classes.histogram import Histogram
 from classes.featureExtraction import FeatureExtraction
 from classes.pca import PCA
+from classes.classify import Classify
 
 tools = Tools()
 database = Database()
@@ -53,4 +54,6 @@ for j in list(pca_merkmale.T[0]):
     temp.append(float(j))
 
 featureVector = [pix_av_merkmale] + histogram_merkmale + temp
+classify = Classify()
+classify.crispKnn(featureVectors, 5)
 print(featureVector)
