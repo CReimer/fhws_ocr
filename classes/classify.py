@@ -10,48 +10,44 @@ class Classify:
     def crispKnn(compareVector, k):     # knn ohne Membership. Sollte so funktionieren
 
         def getKey(item):   # wird genutzt um nach Distanz zu sortieren
-            return item[1]
+            return item[2]
 
-        def euclid(vectorA, vectorB):
-            if len(vectorA) == len(vectorB):
+        def euclid(vectorA, vectorB):   # eigener Euklid
+            euclideanDistance = 0
 
-                euclideanDistance = 0
-
-                for iEuc in range(len(vectorA)):
+            if len(vectorA) == len(vectorB):    # prüfen ob die Merkmalsvektoren gleich lang sind
+                for iEuc in range(len(vectorA)):    # step für step die Merkmalsvektoren durchlaufen
                     singleDistance = (vectorA[iEuc] - vectorB[iEuc])**2
                     euclideanDistance += singleDistance
-
                 euclideanDistance = euclideanDistance**0.5
+            else:   # falls die Vektoren unterschiedlich lang sind.
+                print("Vectors are of different length.")
 
             return euclideanDistance
 
         database = Database()
-        database.loadDatabase()
+        database.loadDatabase()     # Datenbank initialisieren
 
-        labeledVectors = []
+        labeledVectors = []     # Liste für alle Merkmalsvektoren und deren Klasse vorbereiten
 
         featureVectors = database.readFeatureVectors()
         for char in featureVectors:
             for char_vector_count in featureVectors[char]:
                 oneLabeledVector = []
                 oneLabeledVector.append(char)       # label merken
-                oneLabeledVector.append(char_vector_count)  # Merkmalsvector merken
+                oneLabeledVector.append(featureVectors[char][char_vector_count])  # Merkmalsvector merken
 
                 labeledVectors.append(oneLabeledVector)     # den einen gelabelten vector in die Sammlung werfen.
 
-        # compareVector = numpy.array(compareVector)  # hält eingehenden Merkmalsvector als numpy Array
         distances = []
         neighbours = []
 
-
         # durchläuft alle Merkmalsvectoren der db und berechnet ihre distanz zum neuen Wert
         for entry in labeledVectors:
-            # currentVector = numpy.array(entry[1])     # entry[1], weil dort der Merkmalsvector ist
-            # distance = numpy.linalg.norm(currentVector - compareVector)
             distance = euclid(compareVector, entry[1])
-            distances.append(labeledVectors[entry], distance)
-            # jetzt enthält distances alle gelabelten merkmalsvectoren
-            # und bei jedem der Vectoren steht die distanz zum neuen wert
+            distances.append([entry[0], entry[1], distance])
+            # jetzt enthält distances alle Merkmalsvectoren und deren Klasse
+            # und bei jedem der Vektoren steht die distanz zum zu vergleichenden Vektor
 
         distances.sort(key=getKey)  # sortiere nach der errechneten distanz
 
@@ -66,12 +62,12 @@ class Classify:
         for a in neighbours:    # zähle welches Label das häufigste ist
             count = 0
             for b in neighbours:
-                if b[0] == a[0]:    # 0, da dort das label gespeichert ist
+                if b[0] == a[0]:
                     count = count + 1
             if mostFrequentLabelCount < count:
                 mostFrequentLabel = a[0]
                 mostFrequentLabelCount = count
-
+        print("Class of Comparevector: ")
         print(mostFrequentLabel)
 
     @staticmethod
