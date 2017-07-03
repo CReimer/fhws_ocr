@@ -7,6 +7,23 @@ class Classify:
 
     @staticmethod
     def crispKnn(compareVector, k):     # knn ohne Membership. Sollte so funktionieren
+
+        def getKey(item):   # wird genutzt um nach Distanz zu sortieren
+            return item[1]
+
+        def euclid(vectorA, vectorB):
+            if len(vectorA) == len(vectorB):
+
+                euclideanDistance = 0
+
+                for iEuc in range(len(vectorA)):
+                    singleDistance = (vectorA[iEuc] - vectorB[iEuc])**2
+                    euclideanDistance += singleDistance
+
+                euclideanDistance = euclideanDistance**0.5
+
+            return euclideanDistance
+
         database = Database()
         database.loadDatabase()
 
@@ -21,17 +38,16 @@ class Classify:
 
                 labeledVectors.append(oneLabeledVector)     # den einen gelabelten vector in die Sammlung werfen.
 
-        compareVector = numpy.array(compareVector)  # hält eingehenden Merkmalsvector als numpy Array
+        # compareVector = numpy.array(compareVector)  # hält eingehenden Merkmalsvector als numpy Array
         distances = []
         neighbours = []
 
-        def getKey(item):   # wird genutzt um nach Distanz zu sortieren
-            return item[1]
 
         # durchläuft alle Merkmalsvectoren der db und berechnet ihre distanz zum neuen Wert
         for entry in labeledVectors:
-            currentVector = numpy.array(entry[1])     # entry[1], weil dort der Merkmalsvector ist
-            distance = numpy.linalg.norm(currentVector - compareVector)
+            # currentVector = numpy.array(entry[1])     # entry[1], weil dort der Merkmalsvector ist
+            # distance = numpy.linalg.norm(currentVector - compareVector)
+            distance = euclid(compareVector, entry[1])
             distances.append(labeledVectors[entry], distance)
             # jetzt enthält distances alle gelabelten merkmalsvectoren
             # und bei jedem der Vectoren steht die distanz zum neuen wert
