@@ -3,6 +3,7 @@
 import string
 import cv2
 import numpy
+import matplotlib.pyplot as plt
 
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
@@ -35,7 +36,7 @@ splitted_chars = preprocess.splitChars()
 
 # Histogram
 histogram2 = Histogram(splitted_chars[0])
-histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
+histogram_merkmale = histogram2.rowWert2wert()  # histogram2.line_histogram() + histogram2.row_histogram()
 
 # Pixel Average
 pix_av2 = FeatureExtraction(splitted_chars[0])
@@ -55,5 +56,7 @@ for j in list(pca_merkmale.T[0]):
 
 featureVector = [pix_av_merkmale] + histogram_merkmale + temp
 classify = Classify()
-classify.crispKnn(featureVector, 3)
+classify.crispKnn(featureVector, 5)
 print(featureVector)
+
+#Classify.crispKnn(featureVector, 3)
