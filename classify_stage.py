@@ -39,7 +39,7 @@ def run(singleChar):
 
     featureVector = [pix_av_merkmale] + histogram_merkmale + temp
     classify = Classify()
-    classify.crispKnn(featureVector, 7)
+    classify.crispKnn(featureVector, 3)
     #print(featureVector)
 
 characterCount = 4
@@ -54,7 +54,7 @@ for char in featureVectors:
         membershipvalue = database.read("featureMembership", char + str(char_vector_count))  # Read back from database.
 
 # Testbild wird hier geladen und auf gleiche Weise durch Preprocessing gejagt
-img = cv2.imread('trainingdata/trainingsdata.off/Arial.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('trainingdata/trainingsdata.off/helloworld.png', cv2.IMREAD_GRAYSCALE)
 preprocess = Preprocessing(img)
 preprocess.binariseImg()
 splitted_chars = preprocess.splitChars()
