@@ -1,6 +1,6 @@
 class FeatureExtraction:
     def __init__(self, img):
-        print("Init Feature Extraction")
+        #print("Init Feature Extraction")
         self.img = img
         self.rows = len(img[0])
         self.lines = len(img)
@@ -8,7 +8,7 @@ class FeatureExtraction:
     def getpixelaverage(self):
         # block_size = 11  # decides the size of neighbourhood area
         # c = -15  # a constant which is subtracted from the mean or weighted mean
-        print("Extracting pixel-average")
+        #print("Extracting pixel-average")
 
         # computing pixel-average
         black = 0
@@ -25,7 +25,7 @@ class FeatureExtraction:
         sum_white = white * 255
         pixel_average = sum_white / amount
 
-        print("Pixel Average: ")
-        print(pixel_average)
+        #print("Pixel Average: ")
+        #print(pixel_average)
 
         return pixel_average

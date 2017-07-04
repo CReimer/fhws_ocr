@@ -3,7 +3,6 @@
 import string
 import cv2
 import numpy
-import matplotlib.pyplot as plt
 
 from classes.preprocessing import Preprocessing
 from classes.tools import Tools
@@ -17,6 +16,33 @@ tools = Tools()
 database = Database()
 database.loadDatabase()
 
+def run(singleChar):
+    # Histogram
+    histogram2 = Histogram(singleChar)
+    histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
+
+    # Pixel Average
+    pix_av2 = FeatureExtraction(singleChar)
+    pix_av_merkmale = pix_av2.getpixelaverage()
+
+    # PCA
+    pca2 = PCA()
+    pca2.testChar(singleChar)  # In PCA Klasse laden
+
+    pca2.matrix -= numpy.array(database.read('common', 'pca_mean'))  # Mean Vector aus Datenbank
+    pca_merkmale = pca2.pca(
+        numpy.array(database.read('common',
+                                  'pca_eig')[0]))
+    temp = list()
+    for j in list(pca_merkmale.T[0]):
+        temp.append(float(j))
+
+    featureVector = [pix_av_merkmale] + histogram_merkmale + temp
+    classify = Classify()
+    classify.crispKnn(featureVector, 7)
+    #print(featureVector)
+
+characterCount = 4
 ## CLASSIFICATION
 featureVectors = database.readFeatureVectors()
 for char in featureVectors:
@@ -28,35 +54,10 @@ for char in featureVectors:
         membershipvalue = database.read("featureMembership", char + str(char_vector_count))  # Read back from database.
 
 # Testbild wird hier geladen und auf gleiche Weise durch Preprocessing gejagt
-img = cv2.imread('trainingdata/Serif.png', cv2.IMREAD_GRAYSCALE)
+img = cv2.imread('trainingdata/trainingsdata.off/Arial.png', cv2.IMREAD_GRAYSCALE)
 preprocess = Preprocessing(img)
 preprocess.binariseImg()
 splitted_chars = preprocess.splitChars()
-# Hier sollte ein Array mit nur einem Element (nur ein Buchstabe) erreicht sein.
 
-# Histogram
-histogram2 = Histogram(splitted_chars[0])
-histogram_merkmale = histogram2.rowWert2wert()  # histogram2.line_histogram() + histogram2.row_histogram()
-
-# Pixel Average
-pix_av2 = FeatureExtraction(splitted_chars[0])
-pix_av_merkmale = pix_av2.getpixelaverage()
-
-# PCA
-pca2 = PCA()
-pca2.testChar(splitted_chars[0])  # In PCA Klasse laden
-
-pca2.matrix -= numpy.array(database.read('common', 'pca_mean'))  # Mean Vector aus Datenbank
-pca_merkmale = pca2.pca(
-    numpy.array(database.read('common',
-                              'pca_eig')[0]))
-temp = list()
-for j in list(pca_merkmale.T[0]):
-    temp.append(float(j))
-
-featureVector = [pix_av_merkmale] + histogram_merkmale + temp
-classify = Classify()
-classify.crispKnn(featureVector, 5)
-print(featureVector)
-
-#Classify.crispKnn(featureVector, 3)
+for singleChar in splitted_chars:
+    run(singleChar)

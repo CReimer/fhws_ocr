@@ -66,8 +66,8 @@ class Classify:
             if mostFrequentLabelCount < count:
                 mostFrequentLabel = a[0]
                 mostFrequentLabelCount = count
-        print("Class of Comparevector: ")
-        print(mostFrequentLabel)
+        #print("Class of Comparevector: ")
+        print(mostFrequentLabel, end='')
 
     @staticmethod
     def classifyTrainingSetSimple(matrix):
@@ -170,3 +170,11 @@ class Classify:
 
         compareVector.append(classMembership)   # weise dem merkmalsvector in einem zusätzlichen slot das
                                                 # 2d array mit der membership in allen klassen zu
+
+
+
+
+
+
+
+
