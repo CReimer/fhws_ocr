@@ -38,7 +38,7 @@ histogram2 = Histogram(splitted_chars[0])
 histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
 
 # Pixel Average
-pix_av2 = FeatureExtraction(splitted_chars[0])
+pix_av2 = FeatureExtraction(splitted_chars[1])
 pix_av_merkmale = pix_av2.getpixelaverage()
 
 # PCA
