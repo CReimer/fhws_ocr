@@ -33,7 +33,7 @@ for t_set in glob.glob('./trainingdata/*.png'):
 for i in range(len(char_values)):
     for font in splitted_t_set:
         histogram = Histogram(font[i])
-        database.add(char_values[i], 'histogram', [histogram.line_histogram(), histogram.row_histogram()])
+        database.add(char_values[i], 'histogram', histogram.rowWert2wert())# [histogram.line_histogram(), histogram.row_histogram()])
 
 # Pixel Average
 for i in range(len(char_values)):
