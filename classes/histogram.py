@@ -1,7 +1,9 @@
+import cv2
+
 class Histogram:
     def __init__(self, img):
         print("Init Histogram")
-        self.img = img
+        self.img = cv2.resize(img, (32, 32), interpolation=cv2.INTER_AREA)
         self.rows = len(img[0])
         self.lines = len(img)
 
