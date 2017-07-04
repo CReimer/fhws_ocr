@@ -19,7 +19,7 @@ database.loadDatabase()
 def run(singleChar):
     # Histogram
     histogram2 = Histogram(singleChar)
-    histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
+    histogram_merkmale = histogram2.rowWert2wert()      # line_histogram() + histogram2.row_histogram()
 
     # Pixel Average
     pix_av2 = FeatureExtraction(singleChar)
@@ -40,7 +40,7 @@ def run(singleChar):
     featureVector = [pix_av_merkmale] + histogram_merkmale + temp
     classify = Classify()
     classify.crispKnn(featureVector, 3)
-    #print(featureVector)
+    print(featureVector)
 
 characterCount = 4
 ## CLASSIFICATION
