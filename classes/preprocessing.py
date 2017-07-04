@@ -45,13 +45,13 @@ class Preprocessing:
         rowOccupancy = [0] * self.rows
         for row in range(self.rows):
             for line in range(self.lines):
-                if self.img[line][row] == 255:
+                if self.img[line][row] > 0:
                     rowOccupancy[row] += 1
 
         start_row = None
         end_row = None
 
-        margin_percent = 0.1
+        margin_percent = 0.0
         margin = line / 100 * margin_percent
 
         for row in range(len(rowOccupancy)):
@@ -78,20 +78,18 @@ class Preprocessing:
         lineOccupancy = [0] * self.lines
         for line in range(lines):
             for row in range(rows):
-                if img[line][row] == 255:
+                if img[line][row] > 0:
                     lineOccupancy[line] += 1
 
         start_line = None
         end_line = None
         for line in range(len(lineOccupancy)):
-            if start_line:
-                if not lineOccupancy[line]:
-                    end_line = line
-            else:
+            if not start_line:
                 if lineOccupancy[line]:
                     start_line = line
-            if start_line and end_line:
-                return img[start_line:end_line, 0:rows]
+            if lineOccupancy[line]:
+                end_line = line
+        return img[start_line:end_line, 0:rows]
 
     def skelettizeImg(self):
         skel = numpy.zeros(self.img.shape, numpy.uint8)  # Initialize empty skeleton

@@ -16,6 +16,7 @@ tools = Tools()
 database = Database()
 database.loadDatabase()
 
+
 def run(singleChar):
     # Histogram
     histogram2 = Histogram(singleChar)
@@ -40,7 +41,8 @@ def run(singleChar):
     featureVector = [pix_av_merkmale] + histogram_merkmale + temp
     classify = Classify()
     classify.crispKnn(featureVector, 3)
-    #print(featureVector)
+    # print(featureVector)
+
 
 characterCount = 4
 ## CLASSIFICATION
@@ -59,5 +61,6 @@ preprocess = Preprocessing(img)
 preprocess.binariseImg()
 splitted_chars = preprocess.splitChars()
 
-for singleChar in splitted_chars:
-    run(singleChar)
+for i in range(len(splitted_chars)):
+    #tools.writeImage(splitted_chars[i], "out" + str(i) + '.png')
+    run(splitted_chars[i])
