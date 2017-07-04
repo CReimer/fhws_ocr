@@ -19,7 +19,7 @@ database.loadDatabase()
 def run(singleChar):
     # Histogram
     histogram2 = Histogram(singleChar)
-    histogram_merkmale = histogram2.line_histogram() + histogram2.row_histogram()
+    histogram_merkmale = histogram2.rowWert2wert()
 
     # Pixel Average
     pix_av2 = FeatureExtraction(singleChar)

@@ -38,7 +38,7 @@ class Database:
             try:
                 for i in range(len(self.data[char]['histogram'])):
                     pixav = self.data[char]['pixelAv'][i]
-                    histo = sum(self.data[char]['histogram'][i], [])
+                    histo = self.data[char]['histogram'][i]
                     pca = self.data[char]['pca'][i]
                     featureVectors[char][i] = [pixav] + histo + pca
             except KeyError:
