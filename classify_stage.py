@@ -41,7 +41,7 @@ def run(singleChar):
     featureVector = [pix_av_merkmale] + histogram_merkmale + temp
     classify = Classify()
     classify.crispKnn(featureVector, 3)
-    # print(featureVector)
+    print(featureVector)
 
 
 characterCount = 4
